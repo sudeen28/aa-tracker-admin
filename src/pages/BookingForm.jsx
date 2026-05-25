@@ -446,30 +446,22 @@ export default function BookingForm() {
               <div>
                 <label style={label}>REQUIREMENTS (one per line: "Label|Value")</label>
                 <textarea style={{ ...input, minHeight: 80, resize: "vertical", fontFamily: "monospace", fontSize: 12 }}
-                  value={Array.isArray(v.requirements) ? v.requirements.map(r=>r.label+"|"+r.value).join("
-") : ""}
-                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,requirements:e.target.value.split("
-").filter(Boolean).map(line=>{const[label,value]=line.split("|");return{label:label?.trim()||"",value:value?.trim()||""}})}:x))}
-                  placeholder={"Visa Type|B-1/B-2 Nonimmigrant Visa
-Cost|USD $185
-Processing Time|3-8 weeks"} />
+                  value={Array.isArray(v.requirements) ? v.requirements.map(r=>r.label+"|"+r.value).join("\n") : ""}
+                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,requirements:e.target.value.split("\n").filter(Boolean).map(line=>{const[label,value]=line.split("|");return{label:label?.trim()||"",value:value?.trim()||""}})}:x))}
+                  placeholder={"Visa Type|B-1/B-2 Nonimmigrant Visa\nCost|USD $185\nProcessing Time|3-8 weeks"} />
               </div>
               <div style={{ marginTop: 10 }}>
                 <label style={label}>EXEMPTIONS (one per line)</label>
                 <textarea style={{ ...input, minHeight: 60, resize: "vertical" }}
-                  value={Array.isArray(v.exemptions) ? v.exemptions.join("
-") : ""}
-                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,exemptions:e.target.value.split("
-").filter(Boolean)}:x))}
+                  value={Array.isArray(v.exemptions) ? v.exemptions.join("\n") : ""}
+                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,exemptions:e.target.value.split("\n").filter(Boolean)}:x))}
                   placeholder="You hold a valid US visa" />
               </div>
               <div style={{ marginTop: 10 }}>
                 <label style={label}>CHECKLIST (one per line)</label>
                 <textarea style={{ ...input, minHeight: 60, resize: "vertical" }}
-                  value={Array.isArray(v.checklist) ? v.checklist.join("
-") : ""}
-                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,checklist:e.target.value.split("
-").filter(Boolean)}:x))}
+                  value={Array.isArray(v.checklist) ? v.checklist.join("\n") : ""}
+                  onChange={e => setVisaEntries(vs=>vs.map((x,j)=>j===i?{...x,checklist:e.target.value.split("\n").filter(Boolean)}:x))}
                   placeholder="Valid passport&#10;DS-160 form" />
               </div>
             </div>
