@@ -34,7 +34,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 16, marginBottom: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(140px,1fr))", gap: 12, marginBottom: 24 }}>
         {stats.map(s => (
           <div key={s.label} style={{ background: "white", borderRadius: 14, padding: "20px 22px", border: "1px solid #e2e8f4", display: "flex", alignItems: "center", gap: 14 }}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{s.icon}</div>
@@ -63,7 +63,7 @@ export default function Dashboard() {
             <Link to="/bookings/new" style={{ padding: "10px 22px", background: "linear-gradient(135deg,#0047AB,#003580)", color: "white", borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>Create Booking</Link>
           </div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 500 }}>
             <thead>
               <tr style={{ background: "#f8faff" }}>
                 {["PNR", "Passenger", "Route", "Status", "Created", ""].map(h => (

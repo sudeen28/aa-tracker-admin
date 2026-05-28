@@ -68,7 +68,7 @@ export default function Bookings() {
             {!search && <Link to="/bookings/new" style={{ padding: "9px 20px", background: "linear-gradient(135deg,#0047AB,#003580)", color: "white", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>Create First Booking</Link>}
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 600 }}>
               <thead>
                 <tr style={{ background: "#f8faff" }}>
