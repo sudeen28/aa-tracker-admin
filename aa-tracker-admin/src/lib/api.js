@@ -6,13 +6,16 @@ function getToken() {
 
 async function request(path, options = {}) {
   const token = getToken();
+
   const res = await fetch(BASE + path, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: "Bearer " + token } : {}),
+      ...(options.headers || {}),
     },
-    ...options,
   });
+
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Request failed");
   return data;
