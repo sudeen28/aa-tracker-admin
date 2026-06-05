@@ -30,7 +30,7 @@ export default function BookingForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [passenger, setPassenger] = useState({ title: "MR", firstName: "", lastName: "", frequentFlyer: "", passport: "" });
+  const [passenger, setPassenger] = useState({ title: "MR", firstName: "", lastName: "", email: "", frequentFlyer: "", passport: "" });
   const [segments, setSegments] = useState([{ ...blank_segment }]);
   const [fare, setFare] = useState({ basis: "", cabinClass: "Economy (N)", ticketFare: "", fuelSurcharge: "", taxes: "", serviceCharge: "", aviationLevy: "", total: "", payment: "", purchaseDate: "", validBefore: "", co2: "", changesBefore: "", changesAfter: "", cancelBefore: "", cancelAfter: "", noShow: "", notValidNote: "" });
   const [baggage, setBaggage] = useState({ personal: "1 personal item", carryOn: "1 x 10kg", checked: "1 x 23kg" });
@@ -61,7 +61,7 @@ export default function BookingForm() {
   useEffect(() => {
     if (!isEdit) return;
     getBooking(id).then(({ booking: b }) => {
-      if (b.passenger) setPassenger({ title: b.passenger.title, firstName: b.passenger.firstName, lastName: b.passenger.lastName, frequentFlyer: b.passenger.frequentFlyer || "", passport: b.passenger.passport || "" });
+      if (b.passenger) setPassenger({ title: b.passenger.title, firstName: b.passenger.firstName, lastName: b.passenger.lastName, email: b.passenger.email || "", frequentFlyer: b.passenger.frequentFlyer || "", passport: b.passenger.passport || "" });
       if (b.segments && b.segments.length) setSegments(b.segments.map(s => ({ flightNumber: s.flightNumber, aircraft: s.aircraft, fromCode: s.fromCode, fromCity: s.fromCity, fromTerminal: s.fromTerminal, fromGate: s.fromGate, fromLat: s.fromLat, fromLng: s.fromLng, toCode: s.toCode, toCity: s.toCity, toTerminal: s.toTerminal, toGate: s.toGate, toLat: s.toLat, toLng: s.toLng, departsDate: s.departsDate, departsTime: s.departsTime, arrivesDate: s.arrivesDate, arrivesTime: s.arrivesTime, duration: s.duration, seat: s.seat, cabinClass: s.cabinClass, meal: s.meal, status: s.status })));
       if (b.fare) setFare({ basis: b.fare.basis, cabinClass: b.fare.cabinClass, ticketFare: b.fare.ticketFare, fuelSurcharge: b.fare.fuelSurcharge, taxes: b.fare.taxes, serviceCharge: b.fare.serviceCharge, aviationLevy: b.fare.aviationLevy, total: b.fare.total, payment: b.fare.payment, purchaseDate: b.fare.purchaseDate, validBefore: b.fare.validBefore || "", co2: b.fare.co2 || "", changesBefore: b.fare.changesBefore || "", changesAfter: b.fare.changesAfter || "", cancelBefore: b.fare.cancelBefore || "", cancelAfter: b.fare.cancelAfter || "", noShow: b.fare.noShow || "", notValidNote: b.fare.notValidNote || "" });
       if (b.baggage) setBaggage({ personal: b.baggage.personal, carryOn: b.baggage.carryOn, checked: b.baggage.checked });
@@ -169,6 +169,11 @@ export default function BookingForm() {
             </div>
             <div><label style={label}>FIRST NAME</label><input required style={input} value={passenger.firstName} onChange={e => setPassenger(p => ({ ...p, firstName: e.target.value }))} placeholder="James" /></div>
             <div><label style={label}>LAST NAME</label><input required style={input} value={passenger.lastName} onChange={e => setPassenger(p => ({ ...p, lastName: e.target.value }))} placeholder="Mitchell" /></div>
+            <div>
+              <label style={label}>PASSENGER EMAIL <span style={{ color: "#CC0000" }}>*</span></label>
+              <input required type="email" style={{ ...input, borderColor: !passenger.email ? "#fecaca" : "#e2e8f4" }} value={passenger.email} onChange={e => setPassenger(p => ({ ...p, email: e.target.value }))} placeholder="passenger@email.com" />
+              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>Confirmation email will be sent here</div>
+            </div>
             <div><label style={label}>FREQUENT FLYER #</label><input style={input} value={passenger.frequentFlyer} onChange={e => setPassenger(p => ({ ...p, frequentFlyer: e.target.value }))} placeholder="AA-9284710" /></div>
             <div><label style={label}>PASSPORT</label><input style={input} value={passenger.passport} onChange={e => setPassenger(p => ({ ...p, passport: e.target.value }))} placeholder="***4821" /></div>
           </div>
