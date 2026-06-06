@@ -107,7 +107,18 @@ export default function BookingForm() {
         baggageStages,
         layover: hasLayover ? layover : null,
         visaEntries,
-        seatConfig: hasSeatConfig ? seatConfig : null,
+        seatConfig: hasSeatConfig ? {
+  ...seatConfig,
+  sections: seatConfig.sections || [
+    {
+      name: "Economy",
+      rows: Array.from({ length: 30 }, (_, i) => ({
+        row: i + 1,
+        seats: ["A", "B", "C", "D", "E", "F"]
+      }))
+    }
+  ]
+} : null,
         mealOptions,
         assistanceOptions,
       };
