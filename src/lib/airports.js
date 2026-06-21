@@ -234,6 +234,8 @@ export const AIRPORTS_DB = [
   { code: "CHC", name: "Christchurch Airport", city: "Christchurch", country: "New Zealand", lat: -43.4894, lng: 172.5322 },
   { code: "NAN", name: "Nadi International", city: "Nadi", country: "Fiji", lat: -17.7554, lng: 177.4431 },
   // North America - USA
+  { code: "AEX", name: "Alexandria International", city: "Alexandria", country: "United States", lat: 31.3274, lng: -92.5498 },
+  { code: "AMA", name: "Rick Husband Amarillo International", city: "Amarillo", country: "United States", lat: 35.2194, lng: -101.7059 },
   { code: "JFK", name: "John F. Kennedy International", city: "New York", country: "USA", lat: 40.6413, lng: -73.7781 },
   { code: "EWR", name: "Newark Liberty International", city: "New Jersey", country: "USA", lat: 40.6895, lng: -74.1745 },
   { code: "LGA", name: "LaGuardia Airport", city: "New York", country: "USA", lat: 40.7769, lng: -73.8740 },
