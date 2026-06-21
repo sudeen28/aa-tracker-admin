@@ -399,7 +399,7 @@ export const AIRPORTS_DB = [
 
   // North America - USA
   { code: "AEX", name: "Alexandria International", city: "Alexandria", country: "United States", lat: 31.3274, lng: -92.5498 },
-{ code: "AMA", name: "Rick Husband Amarillo International", city: "Amarillo", country: "United States", lat: 35.2194, lng: -101.7059 },
+  { code: "AMA", name: "Rick Husband Amarillo International", city: "Amarillo", country: "United States", lat: 35.2194, lng: -101.7059 },
   { code: "ATL", name: "Hartsfield-Jackson Atlanta International", city: "Atlanta", country: "United States", lat: 33.6407, lng: -84.4277 },
   { code: "LAX", name: "Los Angeles International", city: "Los Angeles", country: "United States", lat: 33.9425, lng: -118.4081 },
   { code: "ORD", name: "O'Hare International", city: "Chicago", country: "United States", lat: 41.9742, lng: -87.9073 },
