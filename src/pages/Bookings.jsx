@@ -72,7 +72,7 @@ export default function Bookings() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 600 }}>
               <thead>
                 <tr style={{ background: "#f8faff" }}>
-                  {["PNR", "Passenger", "Route", "Flights", "Date", "Status", "Actions"].map(h => (
+                  {["PNR", "Passenger", "Trip", "Route", "Flights", "Date", "Status", "Actions"].map(h => (
                     <th key={h} style={{ padding: "11px 18px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.08em", borderBottom: "1px solid #e2e8f4", whiteSpace: "nowrap" }}>{h}</th>
                   ))}
                 </tr>
@@ -90,6 +90,11 @@ export default function Bookings() {
                       <td style={{ padding: "13px 18px" }}>
                         <div style={{ fontWeight: 600, color: "#0f172a" }}>{pax ? pax.title + " " + pax.firstName + " " + pax.lastName : "—"}</div>
                         {pax?.passport && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 1 }}>{pax.passport}</div>}
+                      </td>
+                      <td style={{ padding: "13px 18px" }}>
+                        <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: b.tripType === "ROUND_TRIP" ? "#eff6ff" : "#f8fafc", color: b.tripType === "ROUND_TRIP" ? "#0047AB" : "#64748b" }}>
+                          {b.tripType === "ROUND_TRIP" ? "ROUND TRIP" : "ONE-WAY"}
+                        </span>
                       </td>
                       <td style={{ padding: "13px 18px" }}>
                         <div style={{ fontWeight: 600, color: "#0f172a" }}>{first ? first.fromCode + " → " + last.toCode : "—"}</div>

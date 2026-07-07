@@ -37,6 +37,7 @@ export default function BookingForm() {
   const [alerts, setAlerts] = useState([{ type: "success", icon: "✅", message: "" }]);
   const [notifications, setNotifications] = useState([]);
   const [status, setBookingStatus] = useState("CONFIRMED");
+  const [tripType, setTripType] = useState("ONE_WAY");
   const [tourCode, setTourCode] = useState("");
 
   const [baggageStages, setBaggageStages] = useState([
@@ -68,6 +69,7 @@ export default function BookingForm() {
       if (b.alerts && b.alerts.length) setAlerts(b.alerts.map(a => ({ type: a.type, icon: a.icon, message: a.message })));
       if (b.notifications && b.notifications.length) setNotifications(b.notifications.map(n => ({ type: n.type, icon: n.icon, message: n.message, expiresAt: n.expiresAt || "" })));
       setBookingStatus(b.status);
+      setTripType(b.tripType || "ONE_WAY");
       setTourCode(b.tourCode || "");
       if (b.baggageStages && b.baggageStages.length) setBaggageStages(b.baggageStages.map(s => ({ label: s.label, icon: s.icon, description: s.description, time: s.time || "", isCurrent: s.isCurrent })));
       if (b.layover) { setHasLayover(true); setLayover({ airport: b.layover.airport, code: b.layover.code, country: b.layover.country, connectionTime: b.layover.connectionTime, arrivalFlight: b.layover.arrivalFlight, arrivalTime: b.layover.arrivalTime, arrivalTerminal: b.layover.arrivalTerminal, arrivalGate: b.layover.arrivalGate, depFlight: b.layover.depFlight, depTime: b.layover.depTime, depTerminal: b.layover.depTerminal, depGate: b.layover.depGate, sameTerminal: b.layover.sameTerminal, transferWalk: b.layover.transferWalk || "", tips: b.layover.tips || [] }); }
@@ -91,6 +93,26 @@ export default function BookingForm() {
 
   const updateSeg = (i, key, val) => setSegments(s => s.map((seg, idx) => idx === i ? { ...seg, [key]: val } : seg));
   const addSegment = () => setSegments(s => [...s, { ...blank_segment }]);
+  const addReturnSegment = () => {
+    setTripType("ROUND_TRIP");
+    setSegments(s => {
+      const first = s[0] || blank_segment;
+      const last = s[s.length - 1] || first;
+      return [...s, {
+        ...blank_segment,
+        fromCode: last.toCode,
+        fromCity: last.toCity,
+        fromLat: last.toLat,
+        fromLng: last.toLng,
+        toCode: first.fromCode,
+        toCity: first.fromCity,
+        toLat: first.fromLat,
+        toLng: first.fromLng,
+        cabinClass: first.cabinClass || "Economy",
+        seat: first.seat || "",
+      }];
+    });
+  };
   const removeSegment = (i) => setSegments(s => s.filter((_, idx) => idx !== i));
   const updateAlert = (i, key, val) => setAlerts(a => a.map((al, idx) => idx === i ? { ...al, [key]: val } : al));
   const addAlert = () => setAlerts(a => [...a, { type: "info", icon: "ℹ️", message: "" }]);
@@ -101,7 +123,7 @@ export default function BookingForm() {
     setLoading(true); setError(""); setSuccess("");
     try {
       const payload = {
-        status, tourCode, passenger, segments, fare, baggage,
+        status, tripType, tourCode, passenger, segments, fare, baggage,
         alerts: alerts.filter(a => a.message.trim()),
         notifications: notifications.filter(n => n.message.trim()),
         baggageStages,
@@ -162,6 +184,13 @@ export default function BookingForm() {
               </select>
             </div>
             <div>
+              <label style={label}>TRIP TYPE</label>
+              <select value={tripType} onChange={e => setTripType(e.target.value)} style={input}>
+                <option value="ONE_WAY">One-way trip</option>
+                <option value="ROUND_TRIP">Round trip</option>
+              </select>
+            </div>
+            <div>
               <label style={label}>TOUR CODE</label>
               <input style={input} value={tourCode} onChange={e => setTourCode(e.target.value)} placeholder="e.g. USNG001" />
             </div>
@@ -194,7 +223,10 @@ export default function BookingForm() {
         <div style={section}>
           <div style={{ ...sectionTitle, justifyContent: "space-between" }}>
             <span>✈️ Flight Segments</span>
-            <button type="button" onClick={addSegment} style={{ padding: "5px 14px", background: "#eff6ff", color: "#0047AB", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>+ Add Segment</button>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button type="button" onClick={addReturnSegment} style={{ padding: "5px 14px", background: "#f0fdf4", color: "#16a34a", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>+ Add Return</button>
+              <button type="button" onClick={addSegment} style={{ padding: "5px 14px", background: "#eff6ff", color: "#0047AB", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>+ Add Segment</button>
+            </div>
           </div>
           {segments.map((seg, i) => (
             <div key={i} style={{ border: "1px solid #e2e8f4", borderRadius: 12, padding: "18px", marginBottom: 16, background: "#fafcff" }}>

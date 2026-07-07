@@ -17,13 +17,14 @@ export default function Dashboard() {
 
   const confirmed = bookings.filter(b => b.status === "CONFIRMED").length;
   const cancelled = bookings.filter(b => b.status === "CANCELLED").length;
+  const roundTrips = bookings.filter(b => b.tripType === "ROUND_TRIP").length;
   const recent = bookings.slice(0, 5);
 
   const stats = [
     { label: "Total Bookings", value: bookings.length, icon: "✈️", color: "#0047AB", bg: "#eff6ff" },
     { label: "Confirmed", value: confirmed, icon: "✅", color: "#16a34a", bg: "#f0fdf4" },
     { label: "Cancelled", value: cancelled, icon: "❌", color: "#dc2626", bg: "#fef2f2" },
-    { label: "Admins", value: "—", icon: "👥", color: "#7c3aed", bg: "#faf5ff" },
+    { label: "Round Trips", value: roundTrips, icon: "RT", color: "#7c3aed", bg: "#faf5ff" },
   ];
 
   return (
@@ -66,7 +67,7 @@ export default function Dashboard() {
           <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 500 }}>
             <thead>
               <tr style={{ background: "#f8faff" }}>
-                {["PNR", "Passenger", "Route", "Status", "Created", ""].map(h => (
+                {["PNR", "Passenger", "Trip", "Route", "Status", "Created", ""].map(h => (
                   <th key={h} style={{ padding: "10px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.08em", borderBottom: "1px solid #e2e8f4" }}>{h}</th>
                 ))}
               </tr>
@@ -83,6 +84,11 @@ export default function Dashboard() {
                     </td>
                     <td style={{ padding: "12px 20px", color: "#0f172a" }}>
                       {pax ? pax.title + " " + pax.firstName + " " + pax.lastName : "—"}
+                    </td>
+                    <td style={{ padding: "12px 20px" }}>
+                      <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: b.tripType === "ROUND_TRIP" ? "#eff6ff" : "#f8fafc", color: b.tripType === "ROUND_TRIP" ? "#0047AB" : "#64748b" }}>
+                        {b.tripType === "ROUND_TRIP" ? "ROUND" : "ONE-WAY"}
+                      </span>
                     </td>
                     <td style={{ padding: "12px 20px", color: "#64748b" }}>
                       {seg ? seg.fromCode + " → " + lastSeg.toCode : "—"}
