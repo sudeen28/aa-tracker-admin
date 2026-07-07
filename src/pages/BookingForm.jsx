@@ -12,6 +12,12 @@ const blank_segment = {
   duration: "", seat: "", cabinClass: "Economy", meal: "Standard", status: "On Time",
 };
 
+const blank_layover = {
+  airport: "", code: "", country: "", connectionTime: "", arrivalFlight: "", arrivalTime: "",
+  arrivalTerminal: "", arrivalGate: "", depFlight: "", depTime: "", depTerminal: "", depGate: "",
+  sameTerminal: true, transferWalk: "", tips: [],
+};
+
 const F = { fontFamily: "'Segoe UI',sans-serif" };
 const label = { fontSize: 11, fontWeight: 700, color: "#64748b", letterSpacing: "0.1em", display: "block", marginBottom: 5 };
 const input = { width: "100%", boxSizing: "border-box", padding: "9px 12px", border: "1.5px solid #e2e8f4", borderRadius: 8, fontSize: 13, color: "#0f172a", outline: "none", fontFamily: "inherit", background: "#fafcff" };
@@ -44,8 +50,7 @@ export default function BookingForm() {
     { label: "Checked In", icon: "🏷", description: "Bag tagged at check-in counter", time: "", isCurrent: false },
     { label: "Loaded", icon: "✈️", description: "Loaded onto aircraft", time: "", isCurrent: true },
   ]);
-  const [hasLayover, setHasLayover] = useState(false);
-  const [layover, setLayover] = useState({ airport: "", code: "", country: "", connectionTime: "", arrivalFlight: "", arrivalTime: "", arrivalTerminal: "", arrivalGate: "", depFlight: "", depTime: "", depTerminal: "", depGate: "", sameTerminal: true, transferWalk: "", tips: [] });
+  const [layovers, setLayovers] = useState([]);
   const [visaEntries, setVisaEntries] = useState([]);
   const [hasSeatConfig, setHasSeatConfig] = useState(false);
   const [seatConfig, setSeatConfig] = useState({ aircraft: "", flightLabel: "", selectedSeat: "", occupied: [], exits: [] });
@@ -72,7 +77,7 @@ export default function BookingForm() {
       setTripType(b.tripType || "ONE_WAY");
       setTourCode(b.tourCode || "");
       if (b.baggageStages && b.baggageStages.length) setBaggageStages(b.baggageStages.map(s => ({ label: s.label, icon: s.icon, description: s.description, time: s.time || "", isCurrent: s.isCurrent })));
-      if (b.layover) { setHasLayover(true); setLayover({ airport: b.layover.airport, code: b.layover.code, country: b.layover.country, connectionTime: b.layover.connectionTime, arrivalFlight: b.layover.arrivalFlight, arrivalTime: b.layover.arrivalTime, arrivalTerminal: b.layover.arrivalTerminal, arrivalGate: b.layover.arrivalGate, depFlight: b.layover.depFlight, depTime: b.layover.depTime, depTerminal: b.layover.depTerminal, depGate: b.layover.depGate, sameTerminal: b.layover.sameTerminal, transferWalk: b.layover.transferWalk || "", tips: b.layover.tips || [] }); }
+      if (b.layovers && b.layovers.length) setLayovers(b.layovers.map(l => ({ airport: l.airport, code: l.code, country: l.country, connectionTime: l.connectionTime, arrivalFlight: l.arrivalFlight, arrivalTime: l.arrivalTime, arrivalTerminal: l.arrivalTerminal, arrivalGate: l.arrivalGate, depFlight: l.depFlight, depTime: l.depTime, depTerminal: l.depTerminal, depGate: l.depGate, sameTerminal: l.sameTerminal, transferWalk: l.transferWalk || "", tips: l.tips || [] })));
       if (b.visaEntries && b.visaEntries.length) setVisaEntries(b.visaEntries.map(v => ({ country: v.country, code: v.code, flag: v.flag, purpose: v.purpose, status: v.status, statusLabel: v.statusLabel, statusColor: v.statusColor, summary: v.summary, tip: v.tip, tipType: v.tipType, requirements: v.requirements || [], exemptions: v.exemptions || [], checklist: v.checklist || [] })));
       if (b.seatConfig) { setHasSeatConfig(true); setSeatConfig({ aircraft: b.seatConfig.aircraft, flightLabel: b.seatConfig.flightLabel, selectedSeat: b.seatConfig.selectedSeat, occupied: b.seatConfig.occupied || [], exits: b.seatConfig.exits || [] }); }
       if (b.mealOptions && b.mealOptions.length) setMealOptions(b.mealOptions.map(m => ({ icon: m.icon, label: m.label, desc: m.desc, tag: m.tag || "" })));
@@ -117,6 +122,12 @@ export default function BookingForm() {
   const updateAlert = (i, key, val) => setAlerts(a => a.map((al, idx) => idx === i ? { ...al, [key]: val } : al));
   const addAlert = () => setAlerts(a => [...a, { type: "info", icon: "ℹ️", message: "" }]);
   const removeAlert = (i) => setAlerts(a => a.filter((_, idx) => idx !== i));
+  const addLayover = () => setLayovers(l => [...l, { ...blank_layover, tips: [] }]);
+  const removeLayover = (i) => setLayovers(l => l.filter((_, idx) => idx !== i));
+  const updateLayover = (i, key, val) => setLayovers(l => l.map((lay, idx) => idx === i ? { ...lay, [key]: val } : lay));
+  const addLayoverTip = (i) => setLayovers(l => l.map((lay, idx) => idx === i ? { ...lay, tips: [...lay.tips, { icon: "✈", title: "", text: "" }] } : lay));
+  const updateLayoverTip = (i, j, key, val) => setLayovers(l => l.map((lay, idx) => idx === i ? { ...lay, tips: lay.tips.map((t, k) => k === j ? { ...t, [key]: val } : t) } : lay));
+  const removeLayoverTip = (i, j) => setLayovers(l => l.map((lay, idx) => idx === i ? { ...lay, tips: lay.tips.filter((_, k) => k !== j) } : lay));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,7 +138,7 @@ export default function BookingForm() {
         alerts: alerts.filter(a => a.message.trim()),
         notifications: notifications.filter(n => n.message.trim()),
         baggageStages,
-        layover: hasLayover ? layover : null,
+        layovers,
         visaEntries,
         seatConfig: hasSeatConfig ? {
   ...seatConfig,
@@ -366,30 +377,31 @@ export default function BookingForm() {
           ))}
         </div>
 
-        {/* Layover */}
+        {/* Layovers */}
         <div style={section}>
           <div style={{ ...sectionTitle, justifyContent: "space-between" }}>
             <span>🔁 Layover Details</span>
-            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#0047AB", cursor: "pointer", fontWeight: 600 }}>
-              <input type="checkbox" checked={hasLayover} onChange={e => setHasLayover(e.target.checked)} style={{ width: 16, height: 16, cursor: "pointer" }} />
-              {hasLayover ? "Remove layover" : "Add layover to this booking"}
-            </label>
+            <button type="button" onClick={addLayover} style={{ padding: "4px 12px", background: "#eff6ff", color: "#0047AB", border: "none", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+ Add Layover</button>
           </div>
-          {!hasLayover && (
+          {layovers.length === 0 && (
             <div style={{ padding: "20px", textAlign: "center", background: "#f8faff", borderRadius: 10, border: "1px dashed #e2e8f4", color: "#94a3b8", fontSize: 13 }}>
-              Tick the checkbox above to add layover details
+              No layovers yet — click "+ Add Layover" for each stopover (e.g. one outbound, one on the return leg).
             </div>
           )}
-          {hasLayover && (
-            <>
+          {layovers.map((layover, li) => (
+            <div key={li} style={{ border: "1px solid #e2e8f4", borderRadius: 12, padding: 16, marginBottom: 16, position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#0047AB" }}>Layover {li + 1}{layover.code ? " — " + layover.code : ""}</div>
+                <button type="button" onClick={() => removeLayover(li)} style={{ padding: "5px 10px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>✕ Remove Layover</button>
+              </div>
               <div style={{ ...grid3, marginBottom: 12 }}>
-                <div><label style={label}>AIRPORT</label><input style={input} value={layover.airport} onChange={e => setLayover(l => ({ ...l, airport: e.target.value }))} placeholder="London Heathrow" /></div>
-                <div><label style={label}>CODE</label><input style={input} value={layover.code} onChange={e => setLayover(l => ({ ...l, code: e.target.value }))} placeholder="LHR" /></div>
-                <div><label style={label}>COUNTRY</label><input style={input} value={layover.country} onChange={e => setLayover(l => ({ ...l, country: e.target.value }))} placeholder="United Kingdom" /></div>
-                <div><label style={label}>CONNECTION TIME</label><input style={input} value={layover.connectionTime} onChange={e => setLayover(l => ({ ...l, connectionTime: e.target.value }))} placeholder="3h 40m" /></div>
-                <div><label style={label}>TRANSFER WALK</label><input style={input} value={layover.transferWalk} onChange={e => setLayover(l => ({ ...l, transferWalk: e.target.value }))} placeholder="~12 min walk" /></div>
+                <div><label style={label}>AIRPORT</label><input style={input} value={layover.airport} onChange={e => updateLayover(li, "airport", e.target.value)} placeholder="London Heathrow" /></div>
+                <div><label style={label}>CODE</label><input style={input} value={layover.code} onChange={e => updateLayover(li, "code", e.target.value)} placeholder="LHR" /></div>
+                <div><label style={label}>COUNTRY</label><input style={input} value={layover.country} onChange={e => updateLayover(li, "country", e.target.value)} placeholder="United Kingdom" /></div>
+                <div><label style={label}>CONNECTION TIME</label><input style={input} value={layover.connectionTime} onChange={e => updateLayover(li, "connectionTime", e.target.value)} placeholder="3h 40m" /></div>
+                <div><label style={label}>TRANSFER WALK</label><input style={input} value={layover.transferWalk} onChange={e => updateLayover(li, "transferWalk", e.target.value)} placeholder="~12 min walk" /></div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, paddingTop: 20 }}>
-                  <input type="checkbox" checked={layover.sameTerminal} onChange={e => setLayover(l => ({ ...l, sameTerminal: e.target.checked }))} />
+                  <input type="checkbox" checked={layover.sameTerminal} onChange={e => updateLayover(li, "sameTerminal", e.target.checked)} />
                   <label style={{ fontSize: 12, color: "#64748b" }}>Same Terminal</label>
                 </div>
               </div>
@@ -397,38 +409,38 @@ export default function BookingForm() {
                 <div style={{ border: "1px solid #e2e8f4", borderRadius: 10, padding: 12 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#0047AB", marginBottom: 8 }}>ARRIVAL</div>
                   <div style={grid2}>
-                    <div><label style={label}>FLIGHT</label><input style={input} value={layover.arrivalFlight} onChange={e => setLayover(l => ({ ...l, arrivalFlight: e.target.value }))} placeholder="AA 0081" /></div>
-                    <div><label style={label}>TIME</label><input style={input} value={layover.arrivalTime} onChange={e => setLayover(l => ({ ...l, arrivalTime: e.target.value }))} placeholder="06:30" /></div>
-                    <div><label style={label}>TERMINAL</label><input style={input} value={layover.arrivalTerminal} onChange={e => setLayover(l => ({ ...l, arrivalTerminal: e.target.value }))} placeholder="Terminal 3" /></div>
-                    <div><label style={label}>GATE</label><input style={input} value={layover.arrivalGate} onChange={e => setLayover(l => ({ ...l, arrivalGate: e.target.value }))} placeholder="B22" /></div>
+                    <div><label style={label}>FLIGHT</label><input style={input} value={layover.arrivalFlight} onChange={e => updateLayover(li, "arrivalFlight", e.target.value)} placeholder="AA 0081" /></div>
+                    <div><label style={label}>TIME</label><input style={input} value={layover.arrivalTime} onChange={e => updateLayover(li, "arrivalTime", e.target.value)} placeholder="06:30" /></div>
+                    <div><label style={label}>TERMINAL</label><input style={input} value={layover.arrivalTerminal} onChange={e => updateLayover(li, "arrivalTerminal", e.target.value)} placeholder="Terminal 3" /></div>
+                    <div><label style={label}>GATE</label><input style={input} value={layover.arrivalGate} onChange={e => updateLayover(li, "arrivalGate", e.target.value)} placeholder="B22" /></div>
                   </div>
                 </div>
                 <div style={{ border: "1px solid #e2e8f4", borderRadius: 10, padding: 12 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#CC0000", marginBottom: 8 }}>DEPARTURE</div>
                   <div style={grid2}>
-                    <div><label style={label}>FLIGHT</label><input style={input} value={layover.depFlight} onChange={e => setLayover(l => ({ ...l, depFlight: e.target.value }))} placeholder="AA 0100" /></div>
-                    <div><label style={label}>TIME</label><input style={input} value={layover.depTime} onChange={e => setLayover(l => ({ ...l, depTime: e.target.value }))} placeholder="10:10" /></div>
-                    <div><label style={label}>TERMINAL</label><input style={input} value={layover.depTerminal} onChange={e => setLayover(l => ({ ...l, depTerminal: e.target.value }))} placeholder="Terminal 3" /></div>
-                    <div><label style={label}>GATE</label><input style={input} value={layover.depGate} onChange={e => setLayover(l => ({ ...l, depGate: e.target.value }))} placeholder="C09" /></div>
+                    <div><label style={label}>FLIGHT</label><input style={input} value={layover.depFlight} onChange={e => updateLayover(li, "depFlight", e.target.value)} placeholder="AA 0100" /></div>
+                    <div><label style={label}>TIME</label><input style={input} value={layover.depTime} onChange={e => updateLayover(li, "depTime", e.target.value)} placeholder="10:10" /></div>
+                    <div><label style={label}>TERMINAL</label><input style={input} value={layover.depTerminal} onChange={e => updateLayover(li, "depTerminal", e.target.value)} placeholder="Terminal 3" /></div>
+                    <div><label style={label}>GATE</label><input style={input} value={layover.depGate} onChange={e => updateLayover(li, "depGate", e.target.value)} placeholder="C09" /></div>
                   </div>
                 </div>
               </div>
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>Layover Tips</div>
-                  <button type="button" onClick={() => setLayover(l => ({ ...l, tips: [...l.tips, { icon: "✈", title: "", text: "" }] }))} style={{ padding: "4px 12px", background: "#eff6ff", color: "#0047AB", border: "none", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+ Tip</button>
+                  <button type="button" onClick={() => addLayoverTip(li)} style={{ padding: "4px 12px", background: "#eff6ff", color: "#0047AB", border: "none", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+ Tip</button>
                 </div>
-                {layover.tips.map((tip, i) => (
-                  <div key={i} style={{ display: "grid", gridTemplateColumns: "50px 1fr 2fr 60px", gap: 8, marginBottom: 8 }}>
-                    <input style={input} value={tip.icon} onChange={e => setLayover(l => ({ ...l, tips: l.tips.map((t, j) => j === i ? { ...t, icon: e.target.value } : t) }))} placeholder="🛂" />
-                    <input style={input} value={tip.title} onChange={e => setLayover(l => ({ ...l, tips: l.tips.map((t, j) => j === i ? { ...t, title: e.target.value } : t) }))} placeholder="Tip title" />
-                    <input style={input} value={tip.text} onChange={e => setLayover(l => ({ ...l, tips: l.tips.map((t, j) => j === i ? { ...t, text: e.target.value } : t) }))} placeholder="Tip description" />
-                    <button type="button" onClick={() => setLayover(l => ({ ...l, tips: l.tips.filter((_, j) => j !== i) }))} style={{ padding: "9px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: 7, fontSize: 12, cursor: "pointer" }}>✕</button>
+                {layover.tips.map((tip, ti) => (
+                  <div key={ti} style={{ display: "grid", gridTemplateColumns: "50px 1fr 2fr 60px", gap: 8, marginBottom: 8 }}>
+                    <input style={input} value={tip.icon} onChange={e => updateLayoverTip(li, ti, "icon", e.target.value)} placeholder="🛂" />
+                    <input style={input} value={tip.title} onChange={e => updateLayoverTip(li, ti, "title", e.target.value)} placeholder="Tip title" />
+                    <input style={input} value={tip.text} onChange={e => updateLayoverTip(li, ti, "text", e.target.value)} placeholder="Tip description" />
+                    <button type="button" onClick={() => removeLayoverTip(li, ti)} style={{ padding: "9px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: 7, fontSize: 12, cursor: "pointer" }}>✕</button>
                   </div>
                 ))}
               </div>
-            </>
-          )}
+            </div>
+          ))}
         </div>
 
         {/* Visa Entries */}
