@@ -22,10 +22,10 @@ export const AIRPORTS_DB = [
   { code: "KAD", name: "Kaduna Airport", city: "Kaduna", country: "Nigeria", lat: 10.6960, lng: 7.3201 },
   { code: "BCU", name: "Bauchi State Airport", city: "Bauchi", country: "Nigeria", lat: 10.4828, lng: 9.7440 },
   { code: "BHM", name: "Birmingham-Shuttlesworth International", city: "Birmingham", country: "USA", lat: 33.5629, lng: -86.7535 },
-{ code: "HSV", name: "Huntsville International", city: "Huntsville", country: "USA", lat: 34.6372, lng: -86.7751 },
-{ code: "MGM", name: "Montgomery Regional", city: "Montgomery", country: "USA", lat: 32.3006, lng: -86.3939 },
-{ code: "MOB", name: "Mobile Regional", city: "Mobile", country: "USA", lat: 30.6912, lng: -88.2428 },
-{ code: "TUS", name: "Tucson International", city: "Tucson", country: "USA", lat: 32.1161, lng: -110.9410 },
+  { code: "HSV", name: "Huntsville International", city: "Huntsville", country: "USA", lat: 34.6372, lng: -86.7751 },
+  { code: "MGM", name: "Montgomery Regional", city: "Montgomery", country: "USA", lat: 32.3006, lng: -86.3939 },
+  { code: "MOB", name: "Mobile Regional", city: "Mobile", country: "USA", lat: 30.6912, lng: -88.2428 },
+  { code: "TUS", name: "Tucson International", city: "Tucson", country: "USA", lat: 32.1161, lng: -110.9410 },
 
   // West Africa
   { code: "ACC", name: "Kotoka International", city: "Accra", country: "Ghana", lat: 5.6052, lng: -0.1668 },
