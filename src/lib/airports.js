@@ -30,6 +30,11 @@ export const AIRPORTS_DB = [
   { code: "NIM", name: "Diori Hamani International", city: "Niamey", country: "Niger", lat: 13.4815, lng: 2.1836 },
   { code: "NDJ", name: "Hassan Djamous International", city: "N'Djamena", country: "Chad", lat: 12.1337, lng: 15.0340 },
   { code: "LFW", name: "Lome-Tokoin Airport", city: "Lome", country: "Togo", lat: 6.1656, lng: 1.2545 },
+  { code: "BHM", name: "Birmingham-Shuttlesworth International", city: "Birmingham", country: "USA", lat: 33.5629, lng: -86.7535 },
+{ code: "HSV", name: "Huntsville International", city: "Huntsville", country: "USA", lat: 34.6372, lng: -86.7751 },
+{ code: "MGM", name: "Montgomery Regional", city: "Montgomery", country: "USA", lat: 32.3006, lng: -86.3939 },
+{ code: "MOB", name: "Mobile Regional", city: "Mobile", country: "USA", lat: 30.6912, lng: -88.2428 },
+{ code: "TUS", name: "Tucson International", city: "Tucson", country: "USA", lat: 32.1161, lng: -110.9410 },
   // East Africa
   { code: "NBO", name: "Jomo Kenyatta International", city: "Nairobi", country: "Kenya", lat: -1.3192, lng: 36.9275 },
   { code: "MBA", name: "Moi International", city: "Mombasa", country: "Kenya", lat: -4.0348, lng: 39.5942 },
