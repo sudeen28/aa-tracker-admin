@@ -16,6 +16,7 @@ export const AIRPORTS_DB = [
   { code: "SKO", name: "Sadiq Abubakar III International", city: "Sokoto", country: "Nigeria", lat: 12.9163, lng: 5.2079 },
   { code: "ZAR", name: "Zaria Airport", city: "Zaria", country: "Nigeria", lat: 11.1302, lng: 7.6861 },
   { code: "AKR", name: "Akure Airport", city: "Akure", country: "Nigeria", lat: 7.2467, lng: 5.3010 },
+  { code: "PWM", name: "Portland International Jetport", city: "Portland", country: "United States", lat: 43.6462, lng: -70.3093 },
   // West Africa
   { code: "ACC", name: "Kotoka International", city: "Accra", country: "Ghana", lat: 5.6052, lng: -0.1668 },
   { code: "KMS", name: "Kumasi Airport", city: "Kumasi", country: "Ghana", lat: 6.7145, lng: -1.5908 },
