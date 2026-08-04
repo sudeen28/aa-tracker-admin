@@ -26,6 +26,7 @@ export const AIRPORTS_DB = [
   { code: "MGM", name: "Montgomery Regional", city: "Montgomery", country: "USA", lat: 32.3006, lng: -86.3939 },
   { code: "MOB", name: "Mobile Regional", city: "Mobile", country: "USA", lat: 30.6912, lng: -88.2428 },
   { code: "TUS", name: "Tucson International", city: "Tucson", country: "USA", lat: 32.1161, lng: -110.9410 },
+  { code: "PWM", name: "Portland International Jetport", city: "Portland", country: "United States", lat: 43.6462, lng: -70.3093 },
 
   // West Africa
   { code: "ACC", name: "Kotoka International", city: "Accra", country: "Ghana", lat: 5.6052, lng: -0.1668 },
