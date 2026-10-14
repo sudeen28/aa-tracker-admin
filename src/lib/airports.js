@@ -2,6 +2,7 @@
 export const AIRPORTS_DB = [
   // Nigeria
   { code: "LOS", name: "Murtala Muhammed International", city: "Lagos", country: "Nigeria", lat: 6.5774, lng: 3.3212 },
+ { code: "JAX", name: "Jacksonville International Airport", city: "Jacksonville", country: "United States", lat: 30.4941, lng: -81.6879 },
   { code: "ABV", name: "Nnamdi Azikiwe International", city: "Abuja", country: "Nigeria", lat: 9.0067, lng: 7.2632 },
   { code: "KAN", name: "Mallam Aminu Kano International", city: "Kano", country: "Nigeria", lat: 12.0476, lng: 8.5246 },
   { code: "PHC", name: "Port Harcourt International", city: "Port Harcourt", country: "Nigeria", lat: 5.0155, lng: 6.9496 },
